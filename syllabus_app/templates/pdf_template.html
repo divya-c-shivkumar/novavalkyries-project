@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+body {
+    font-family: "Times New Roman";
+    font-size: 11.5px;
+    margin: 20px;
+}
+
+@page {
+    size: A4;
+    margin: 15mm;
+}
+
+/* OUTER BOX */
+.outer-box {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+/* HEADER */
+.header {
+    width: 100%;
+    border-bottom: 1px solid black;
+    margin-bottom: 8px;
+}
+
+.logo {
+    width: 70px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+
+td, th {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.no-border td {
+    border: none;
+}
+
+/* SECTION */
+.section {
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+/* PRINT BUTTON */
+.print-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: black;
+    color: white;
+    padding: 8px;
+}
+
+@media print {
+    .print-btn { display: none; }
+}
+</style>
+
+</head>
+
+<body>
+
+<button class="print-btn" onclick="window.print()">Download PDF</button>
+
+<div class="outer-box">
+
+<!-- HEADER -->
+<table class="header">
+<tr>
+<td style="width:15%; border:none;">
+    <img src="{% static 'logo1.png' %}" class="logo">
+</td>
+
+<td style="width:85%; text-align:center; border:none;">
+    <b>SJB Institute of Technology</b><br>
+    BGS Health and Education City, Bengaluru<br>
+    <b>Dept. of Computer Science and Engineering</b><br>
+    BE in Computer Science and Engineering
+</td>
+</tr>
+</table>
+
+<!-- COURSE DETAILS -->
+<table>
+<tr>
+    <th colspan="2">Course Details</th>
+</tr>
+
+<tr>
+    <td>Course Title</td>
+    <td>{{ subject.name }}</td>
+</tr>
+
+<tr>
+    <td>Course Code</td>
+    <td>{{ subject.code }}</td>
+</tr>
+
+<tr>
+    <td>Credits</td>
+    <td>{{ subject.credits }}</td>
+</tr>
+
+<tr>
+    <td>Hours</td>
+    <td>{{ subject.hours }}</td>
+</tr>
+
+<tr>
+    <td>CIE Marks</td>
+    <td>50</td>
+</tr>
+
+<tr>
+    <td>SEE Marks</td>
+    <td>50</td>
+</tr>
+</table>
+
+<!-- OBJECTIVES -->
+<p class="section">I. Course Objectives</p>
+<ol>
+{% for co in subject.co_set.all %}
+    <li>{{ co.description }}</li>
+{% endfor %}
+</ol>
+
+<!-- COURSE CONTENT -->
+<p class="section">III. COURSE CONTENT</p>
+
+<table>
+<tr>
+    <th>Module</th>
+    <th>Hours</th>
+    <th>Content</th>
+    <th>Hands-on</th>
+    <th>Self Learning</th>
+</tr>
+
+{% for module in subject.module_set.all %}
+<tr>
+    <td>{{ module.title }}</td>
+    <td style="text-align:center;">{{ module.hours }}</td>
+    <td>{{ module.content }}</td>
+    <td>{{ module.hands_on }}</td>
+    <td>{{ module.self_learning }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- COURSE OUTCOMES -->
+<p class="section">IV. COURSE OUTCOMES</p>
+
+<table>
+<tr>
+    <th>CO</th>
+    <th>Description</th>
+</tr>
+
+{% for co in subject.co_set.all %}
+<tr>
+    <td>CO{{ forloop.counter }}</td>
+    <td>{{ co.description }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- CO-PO MAPPING -->
+<p class="section">V. CO-PO Mapping</p>
+
+<table>
+<tr>
+    <th>CO</th>
+    <th>PO1</th>
+    <th>PO2</th>
+    <th>PO3</th>
+    <th>PO4</th>
+    <th>PO5</th>
+    <th>PO6</th>
+    <th>PO7</th>
+</tr>
+
+{% for co in subject.co_set.all %}
+<tr>
+    <td>CO{{ forloop.counter }}</td>
+
+    {% for i in "1234567"|make_list %}
+    <td style="text-align:center;">
+        {% for m in co.copomapping_set.all %}
+            {% if m.po|stringformat:"s" == i %}
+                {{ m.value }}
+            {% endif %}
+        {% endfor %}
+    </td>
+    {% endfor %}
+
+</tr>
+{% endfor %}
+</table>
+
+<!-- APPROVAL -->
+<p class="section">VI. Approval</p>
+
+<table class="no-border" style="margin-top:40px;">
+<tr>
+    <td style="text-align:center;">Faculty Signature</td>
+    <td style="text-align:center;">HOD Approval</td>
+</tr>
+
+<tr style="height:60px;">
+    <td></td>
+    <td></td>
+</tr>
+
+<tr>
+    <td style="text-align:center;">Date</td>
+    <td style="text-align:center;">Date</td>
+</tr>
+</table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+<h1>Syllabus List</h1>
+
+{% for subject in subjects %}
+<p>
+<b>{{ subject.name }}</b> ({{ subject.code }})
+<br>
+<a href="/pdf/{{ subject.id }}/" target="_blank">Open PDF</a>
+</p>
+{% endfor %}
